@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# exceptions to the rule
+# Untracked Folders
+Results/*
+
+# Exceptions to the Rules
 !Results/README.md
 
