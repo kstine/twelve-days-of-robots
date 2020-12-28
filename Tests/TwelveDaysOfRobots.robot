@@ -1,31 +1,47 @@
 ***Settings***
 Documentation  The twelve days of robots
+...            A quick study of list, loops, and switch case style logic.
+...            To execute the entire suite: robot -d Results Tests
+...            To execute the template test: robot -d Results -i some-days-of-robots Tests
 Library  Collections
+Library  Dialogs
 
 ***Variables***
-${KLARCK_VAR} =  , Pekka Klärck Developed For Me:
-@{NTH_DAY_LIST} =  1st  2nd  3rd  4th  5th  6th  7th  8th  9th  10th  11th  12th
-@{NTH_DAYS_LIST} =  Create List
 
 ***Test Cases***
-Verify The Verses Of The Twelve Days Of Robots
+Verify All Verses Of The Twelve Days Of Robots
     [Tags]  12-days-of-robots
     Create And Sing Verses
 
+Verify Some Verses Of The Twelve Days Of Robots
+    [Tags]  some-days-of-robots
+    [Template]  Create And Sing Verses
+    1st    5th
+    2nd    3rd
+    11th   ${EMPTY}
+    2nd    2nd
+
 ***Keywords***
 Create And Sing Verses
-    FOR  ${nth_day}  IN  @{NTH_DAY_LIST}
+    [Arguments]  ${starting_nth_day}=1st  ${ending_nth_day}=12th
+    Set Test Variable  @{NTH_DAY_LIST}  1st  2nd  3rd  4th  5th  6th  7th  8th  9th  10th  11th  12th
+    @{NTH_DAYS_LIST} =  Create List
+    Set Test Variable  @{NTH_DAYS_LIST}
+    ${starting_index} =  Get Index From List  ${NTH_DAY_LIST}  ${starting_nth_day}
+    ${ending_index} =  Get Index From List  ${NTH_DAY_LIST}  ${ending_nth_day}
+    FOR  ${index}  ${nth_day}  IN ENUMERATE  @{NTH_DAY_LIST}
         ${keyword} =  Set Variable  On The ${nth_day} Day Of Robots
         Insert Into List  ${NTH_DAYS_LIST}  0  ${keyword}
-        Sing Verses  ${keyword}
+        Run Keyword If  ${index}>=${starting_index}  Sing Verses  ${keyword}
+        Exit For Loop If  ${index}==${ending_index}
     END
     
 Sing Verses
     [Arguments]  ${keyword}
-    Log To Console  ${keyword}${KLARCK_VAR}
-    FOR  ${nth_days}  IN  @{NTH_DAYS_LIST}
-        Run Keyword  ${nth_days}
-    END
+    ${custom_line} =  Set Variable  , Pekka Klärck Developed For Me:
+    ${first_line} =  Catenate  SEPARATOR=  ${keyword}  ${custom_line}
+    Pause Execution  message=${first_line}
+    Run Keywords  @{NTH_DAYS_LIST}
 
 On The ${nth_day} Day Of Robots
     ${verse} =  Set Variable If
@@ -46,51 +62,52 @@ On The ${nth_day} Day Of Robots
 One Robot Framework User Guide
     [Documentation]  http://robotframework.org/robotframework/#user-guide
     ${length} =  Get Length  ${NTH_DAYS_LIST}
-    Run Keyword If  ${length}==1  Log To Console  And A Robot Framework User Guide
-    ...  ELSE  Log To Console  One Robot Framework User Guide
+    Log To Console  ${length}
+    Run Keyword If  ${length}==1  Execute Manual Step  message=A Robot Framework User Guide
+    ...  ELSE  Execute Manual Step  message=And A Robot Framework User Guide
 
 Two File Extensions
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#supported-file-formats
-    Log To Console  Two File Extensions
+    Execute Manual Step  message=Two File Extensions
 
 Three Output Files
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#different-output-files
-    Log To Console  Three Output Files
+    Execute Manual Step  message=Three Output Files
 
 Four Supporting Tools
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#supporting-tools
-    Log To Console  Four Supporting Tools
+    Execute Manual Step  message=Four Supporting Tools
 
 Five Demonstration Projects
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#demonstrations
-    Log To Console  Five Demonstration Projects
+    Execute Manual Step  message=Five Demonstration Projects
 
 Six Test Data Sections
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#test-data-sections
-    Log To Console  Six Test Data Sections
+    Execute Manual Step  message=Six Test Data Sections
 
 Seven Return Codes
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#return-codes
-    Log To Console  Seven Return Codes
+    Execute Manual Step  message=Seven Return Codes
 
 Eight Escaping Special Characters
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#escaping
-    Log To Console  Eight Escaping Special Characters
+    Execute Manual Step  message=Eight Escaping Special Characters
 
 Nine Variable Priorities And Scopes
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#variable-priorities-and-scopes
-    Log To Console  Nine Variable Priorities And Scopes
+    Execute Manual Step  message=Nine Variable Priorities And Scopes
 
 Ten Remote Library Servers
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#remote-library-interface
     ...  https://github.com/robotframework/RemoteInterface#available-remote-servers
-    Log To Console  Ten Remote Library Servers
+    Execute Manual Step  message=Ten Remote Library Servers
 
 Eleven Standard Libraries
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#standard-libraries
-    Log To Console  Eleven Standard Libraries
+    Execute Manual Step  message=Eleven Standard Libraries
 
 Twelve Actually Thirteen Useful Sections On The robotframework.org Website
     [Documentation]  https://robotframework.org/
     ...  Left sidebar list 
-    Log To Console  Twelve Actually Thirteen Useful Sections On The robotframework.org Website
+    Execute Manual Step  message=Twelve Actually Thirteen Useful Sections On The robotframework.org Website
