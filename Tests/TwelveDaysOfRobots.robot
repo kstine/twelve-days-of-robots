@@ -3,8 +3,9 @@ Documentation  The twelve days of robots
 ...            A quick study of list, loops, and switch case style logic.
 ...            To execute the entire suite: robot -d Results Tests
 ...            To execute the template test: robot -d Results -i some-days-of-robots Tests
-Library  Collections
-Library  Dialogs
+Library        Collections
+Library        Dialogs
+Test Setup     Set Test Variables
 
 ***Variables***
 
@@ -17,28 +18,33 @@ Verify Some Verses Of The Twelve Days Of Robots
     [Tags]  some-days-of-robots
     [Template]  Create And Sing Verses
     1st    5th
-    2nd    3rd
     11th   ${EMPTY}
+    3rd    2nd
     2nd    2nd
 
 ***Keywords***
-Create And Sing Verses
-    [Arguments]  ${starting_nth_day}=1st  ${ending_nth_day}=12th
+Set Test Variables
     Set Test Variable  @{NTH_DAY_LIST}  1st  2nd  3rd  4th  5th  6th  7th  8th  9th  10th  11th  12th
     @{NTH_DAYS_LIST} =  Create List
     Set Test Variable  @{NTH_DAYS_LIST}
+    
+Create And Sing Verses
+    [Arguments]  ${starting_nth_day}=1st  ${ending_nth_day}=12th
     ${starting_index} =  Get Index From List  ${NTH_DAY_LIST}  ${starting_nth_day}
     ${ending_index} =  Get Index From List  ${NTH_DAY_LIST}  ${ending_nth_day}
+    Run Keyword If  ${starting_index}>${ending_index}
+    ...  Fail  message=Until time travel is invented, you cannot have the ${ending_nth_day} follow the ${starting_nth_day}.
     FOR  ${index}  ${nth_day}  IN ENUMERATE  @{NTH_DAY_LIST}
         ${keyword} =  Set Variable  On The ${nth_day} Day Of Robots
         Insert Into List  ${NTH_DAYS_LIST}  0  ${keyword}
         Run Keyword If  ${index}>=${starting_index}  Sing Verses  ${keyword}
         Exit For Loop If  ${index}==${ending_index}
     END
+    Pause Execution  message=Test Completed.
     
 Sing Verses
     [Arguments]  ${keyword}
-    ${custom_line} =  Set Variable  , Pekka Klärck Developed For Me:
+    ${custom_line} =  Set Variable  , Pekka Klärck And Friends Developed For Me:
     ${first_line} =  Catenate  SEPARATOR=  ${keyword}  ${custom_line}
     Pause Execution  message=${first_line}
     Run Keywords  @{NTH_DAYS_LIST}
@@ -62,7 +68,6 @@ On The ${nth_day} Day Of Robots
 One Robot Framework User Guide
     [Documentation]  http://robotframework.org/robotframework/#user-guide
     ${length} =  Get Length  ${NTH_DAYS_LIST}
-    Log To Console  ${length}
     Run Keyword If  ${length}==1  Execute Manual Step  message=A Robot Framework User Guide
     ...  ELSE  Execute Manual Step  message=And A Robot Framework User Guide
 
@@ -100,7 +105,7 @@ Nine Variable Priorities And Scopes
 
 Ten Remote Library Servers
     [Documentation]  http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#remote-library-interface
-    ...  https://github.com/robotframework/RemoteInterface#available-remote-servers
+    ...              https://github.com/robotframework/RemoteInterface#available-remote-servers
     Execute Manual Step  message=Ten Remote Library Servers
 
 Eleven Standard Libraries
@@ -109,5 +114,12 @@ Eleven Standard Libraries
 
 Twelve Actually Thirteen Useful Sections On The robotframework.org Website
     [Documentation]  https://robotframework.org/
-    ...  Left sidebar list 
+    ...              Left sidebar list 
     Execute Manual Step  message=Twelve Actually Thirteen Useful Sections On The robotframework.org Website
+
+*** Comments ***
+Kelby Stine
+Copyright 2020
+License  GNU
+Version 1.0.0
+kelbystine@gmail.com
