@@ -8,6 +8,7 @@ Library        Dialogs
 Test Setup     Set Test Variables
 
 ***Variables***
+@{NTH_DAY_LIST} =  1st  2nd  3rd  4th  5th  6th  7th  8th  9th  10th  11th  12th
 
 ***Test Cases***
 Verify All Verses Of The Twelve Days Of Robots
@@ -16,15 +17,19 @@ Verify All Verses Of The Twelve Days Of Robots
 
 Verify Some Verses Of The Twelve Days Of Robots
     [Tags]  some-days-of-robots
-    [Template]  Create And Sing Verses
+    [Template]  Test Template
     1st    5th
-    11th   ${EMPTY}
+    11th   12th
     3rd    2nd
     2nd    2nd
 
 ***Keywords***
+Test Template
+    [Arguments]  ${starting_nth_day}  ${ending_nth_day}
+    Create And Sing Verses  ${starting_nth_day}  ${ending_nth_day}
+    [Teardown]  Set Test Variables
+
 Set Test Variables
-    Set Test Variable  @{NTH_DAY_LIST}  1st  2nd  3rd  4th  5th  6th  7th  8th  9th  10th  11th  12th
     @{NTH_DAYS_LIST} =  Create List
     Set Test Variable  @{NTH_DAYS_LIST}
     
@@ -33,7 +38,7 @@ Create And Sing Verses
     ${starting_index} =  Get Index From List  ${NTH_DAY_LIST}  ${starting_nth_day}
     ${ending_index} =  Get Index From List  ${NTH_DAY_LIST}  ${ending_nth_day}
     Run Keyword If  ${starting_index}>${ending_index}
-    ...  Fail  message=Until time travel is invented, you cannot have the ${ending_nth_day} follow the ${starting_nth_day}.
+    ...  Fail  Until time travel is invented, you cannot have the ${ending_nth_day} follow the ${starting_nth_day}.
     FOR  ${index}  ${nth_day}  IN ENUMERATE  @{NTH_DAY_LIST}
         ${keyword} =  Set Variable  On The ${nth_day} Day Of Robots
         Insert Into List  ${NTH_DAYS_LIST}  0  ${keyword}
